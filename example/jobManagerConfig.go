@@ -13,10 +13,10 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	// job manager config test
+	config, err := c.JobManagerConfig()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(resp)
+	fmt.Println(config)
 }

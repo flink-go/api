@@ -13,8 +13,8 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	// plan test
+	resp, err := c.PlanJar("8c0c2226-b532-4d9b-b698-8aa649694bb9_test.jar")
 	if err != nil {
 		panic(err)
 	}

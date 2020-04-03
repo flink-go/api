@@ -13,10 +13,10 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	// Checkpoints test
+	v, err := c.Checkpoints("8355c4efb63ddd4ea26a7829156a4c58")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(resp)
+	fmt.Println(v)
 }

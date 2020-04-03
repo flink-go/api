@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/flink-go/api"
@@ -13,10 +12,9 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	// stop job test
+	err = c.StopJob("8ea123d2bdc3064f36b92889e43803ee")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(resp)
 }

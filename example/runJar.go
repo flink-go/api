@@ -13,8 +13,11 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	opts := api.RunOpts{
+		JarID: "8c0c2226-b532-4d9b-b698-8aa649694bb9_test.jar",
+	}
+	// run test
+	resp, err := c.RunJar(opts)
 	if err != nil {
 		panic(err)
 	}

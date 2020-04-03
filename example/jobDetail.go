@@ -13,10 +13,10 @@ func main() {
 		panic(err)
 	}
 
-	// upload test
-	resp, err := c.Jars()
+	// jobs test
+	jobs, err := c.Job("8ea123d2bdc3064f36b92889e43803ee")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(resp)
+	fmt.Println(jobs)
 }

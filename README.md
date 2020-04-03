@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	// Your flink server HTTP API
 	c, err := api.New("127.0.0.1:8081")
 	if err != nil {
 		panic(err)
@@ -38,3 +39,15 @@ More examples in [example](/example) dir.
 * upload jar file
 * list jar files
 * delete jar file
+* plan jar file
+* run jar file
+
+### Job API
+
+* job manager config
+* job manager metrics
+* list all jobs
+* stop a job
+* job overview
+* job detail
+* checkpoints
