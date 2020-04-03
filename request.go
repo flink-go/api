@@ -27,8 +27,8 @@ func (c *httpClient) Do(req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("http status not 200: %d %s", resp.StatusCode, string(body))
+	if int(resp.StatusCode/100) != 2 {
+		return nil, fmt.Errorf("http status not 2xx: %d %s", resp.StatusCode, string(body))
 	}
 	return body, nil
 }

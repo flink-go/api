@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	c, err := api.New(os.Getenv("FILNK_API"))
+	c, err := api.New(os.Getenv("FLINK_API"))
 	if err != nil {
 		panic(err)
 	}
 
 	// Checkpoints test
-	v, err := c.Checkpoints("8355c4efb63ddd4ea26a7829156a4c58")
+	v, err := c.Checkpoints("2bd452ba193d1575a4acc9ed09f896ea")
 	if err != nil {
 		panic(err)
 	}

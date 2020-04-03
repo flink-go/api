@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -292,7 +293,7 @@ type statics struct {
 
 type latest struct {
 	Completed completedCheckpointsStatics `json:"completed"`
-	Savepoint completedCheckpointsStatics `json:"savepoint"`
+	Savepoint savepointsStatics           `json:"savepoint"`
 	Failed    failedCheckpointsStatics    `json:"failed"`
 	Restored  restoredCheckpointsStatics  `json:"restored"`
 }
@@ -313,6 +314,21 @@ type completedCheckpointsStatics struct {
 	Discarded               bool                   `json:"discarded"`
 }
 
+type savepointsStatics struct {
+	ID                      int                    `json:"id"`
+	Status                  string                 `json:"status"`
+	IsSavepoint             bool                   `json:"is_savepoint"`
+	TriggerTimestamp        int64                  `json:"trigger_timestamp"`
+	LatestAckTimestamp      int64                  `json:"latest_ack_timestamp"`
+	StateSize               int64                  `json:"state_size"`
+	End2EndDuration         int64                  `json:"end_to_end_duration"`
+	AlignmentBuffered       int64                  `json:"alignment_buffered"`
+	NumSubtasks             int64                  `json:"num_subtasks"`
+	NumAcknowledgedSubtasks int64                  `json:"num_acknowledged_subtasks"`
+	tasks                   taskCheckpointsStatics `json:"tasks"`
+	ExternalPath            string                 `json:"external_path"`
+	Discarded               bool                   `json:"discarded"`
+}
 type taskCheckpointsStatics struct {
 	ID     string `json:"id"`
 	Status string `json:"status"`
@@ -358,6 +374,82 @@ func (c *Client) Checkpoints(jobID string) (checkpointsResp, error) {
 		"GET",
 		c.url(uri),
 		nil,
+	)
+	if err != nil {
+		return r, err
+	}
+	b, err := c.client.Do(req)
+	if err != nil {
+		return r, err
+	}
+	err = json.Unmarshal(b, &r)
+	return r, err
+}
+
+type savePointsResp struct {
+	RequestID string `json:"request-id"`
+}
+
+// SavePoints triggers a savepoint, and optionally cancels the
+// job afterwards. This async operation would return a
+// 'triggerid' for further query identifier.
+func (c *Client) SavePoints(jobID string, saveDir string, cancleJob bool) (savePointsResp, error) {
+	var r savePointsResp
+
+	type savePointsReq struct {
+		SaveDir   string `json:"target-directory"`
+		CancleJob bool   `json:"cancel-job"`
+	}
+
+	d := savePointsReq{
+		SaveDir:   saveDir,
+		CancleJob: cancleJob,
+	}
+	data := new(bytes.Buffer)
+	json.NewEncoder(data).Encode(d)
+	uri := fmt.Sprintf("/jobs/%s/savepoints", jobID)
+	req, err := http.NewRequest(
+		"POST",
+		c.url(uri),
+		data,
+	)
+	if err != nil {
+		return r, err
+	}
+	b, err := c.client.Do(req)
+	if err != nil {
+		return r, err
+	}
+	err = json.Unmarshal(b, &r)
+	return r, err
+}
+
+type stopJobResp struct {
+	RequestID string `json:"request-id"`
+}
+
+// StopJob stops a job with a savepoint. Optionally, it can also
+// emit a MAX_WATERMARK before taking the savepoint to flush out
+// any state waiting for timers to fire. This async operation
+// would return a 'triggerid' for further query identifier.
+func (c *Client) StopJobWithSavepoint(jobID string, saveDir string, drain bool) (stopJobResp, error) {
+	var r stopJobResp
+	type stopJobReq struct {
+		SaveDir string `json:"targetDirectory"`
+		Drain   bool   `json:"drain"`
+	}
+
+	d := stopJobReq{
+		SaveDir: saveDir,
+		Drain:   drain,
+	}
+	data := new(bytes.Buffer)
+	json.NewEncoder(data).Encode(d)
+	uri := fmt.Sprintf("/jobs/%s/stop", jobID)
+	req, err := http.NewRequest(
+		"POST",
+		c.url(uri),
+		data,
 	)
 	if err != nil {
 		return r, err

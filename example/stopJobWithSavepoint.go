@@ -13,10 +13,9 @@ func main() {
 		panic(err)
 	}
 
-	// jobs test
-	jobs, err := c.Jobs()
+	v, err := c.StopJobWithSavepoint("2bd452ba193d1575a4acc9ed09f896ea", "test", false)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(jobs)
+	fmt.Println(v)
 }

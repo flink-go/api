@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	c, err := api.New(os.Getenv("FILNK_API"))
+	c, err := api.New(os.Getenv("FLINK_API"))
 	if err != nil {
 		panic(err)
 	}
