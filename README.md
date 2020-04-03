@@ -1,4 +1,6 @@
-# Flink Monitoring API Golang library [![GoDoc][doc-img]][doc]
+# Flink Monitoring API Golang library
+
+[![GoDoc](https://godoc.org/github.com/flink-go/api?status.svg)](https://godoc.org/github.com/flink-go/api)
 
 Detail doc: https://ci.apache.org/projects/flink/flink-docs-stable/monitoring/rest_api.html
 
