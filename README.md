@@ -1,4 +1,4 @@
-# Flink Monitoring API Golang library
+# Flink Monitoring API Golang library [![GoDoc][doc-img]][doc]
 
 Detail doc: https://ci.apache.org/projects/flink/flink-docs-stable/monitoring/rest_api.html
 
