@@ -1,3 +1,3 @@
-module github.com/flink-go/api
+module github.com/Dravening/api
 
 go 1.14
