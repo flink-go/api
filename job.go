@@ -33,14 +33,15 @@ func (c *Client) JobManagerConfig() ([]kv, error) {
 	return r, err
 }
 
-type metric struct {
-	ID string `json:"id"`
+type metricValue struct {
+	ID    string `json:"id"`
+	Value string `json:"value,omitempty"`
 }
 
 // JobManagerMetrics provides access to job manager
 // metrics.
-func (c *Client) JobManagerMetrics() ([]metric, error) {
-	var r []metric
+func (c *Client) JobManagerMetrics(ids []string) ([]metricValue, error) {
+	var r []metricValue
 	req, err := http.NewRequest(
 		"GET",
 		c.url("/jobmanager/metrics"),
@@ -49,6 +50,12 @@ func (c *Client) JobManagerMetrics() ([]metric, error) {
 	if err != nil {
 		return r, err
 	}
+	q := req.URL.Query()
+	if len(ids) > 0 {
+		q.Add("get", strings.Join(ids, ","))
+	}
+	req.URL.RawQuery = q.Encode()
+
 	b, err := c.client.Do(req)
 	if err != nil {
 		return r, err
